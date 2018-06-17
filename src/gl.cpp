@@ -1,47 +1,10 @@
-#include<GL/glut.h>
-#include<iostream>
-#include<vector>
-#include<functional>
-#include<cmath>
-
-class OthelloGame
-{
-public:
-  struct Board{
-    std::array<std::array<int, 8>, 8> stones;
-    Board() {
-      stones.at(3).at(3) = -1;
-      stones.at(4).at(4) = -1;
-      stones.at(3).at(4) = 1;
-      stones.at(4).at(3) = 1;
-    }
-  };
-  
-  explicit OthelloGame() {}
-  
-  void setPlayer(std::function<std::pair<int, int>(Board)> player)
-  {
-    if (m_players.size() == 2) {
-      std::cerr << "[Error] Players could not be more than 2." << std::endl;
-      return;
-    }
-    m_players.push_back(player);
-  }
-
-  void update()
-  {
-  }
-
-  std::array<std::array<int, 8>, 8> getBoardStones() { return m_board.stones; }
-  
-private:
-  std::vector<std::function<std::pair<int, int>(Board)>> m_players;
-  Board m_board;
-};
+#include <cmath>
+#include "include/gl.hpp"
 
 namespace gl
 {
   OthelloGame othello_game;
+  
   void init()
   {
     othello_game = OthelloGame{};
@@ -100,8 +63,6 @@ namespace gl
 	  continue;
 	}
 
-	std::cout << i << " " << j << " " << board.at(i).at(j) << std::endl;
-
 	glBegin(GL_TRIANGLE_FAN);
 
 	int color = static_cast<unsigned int>(board.at(i).at(j));
@@ -134,25 +95,4 @@ namespace gl
   void keyboardSpecialUp(int key, int, int)
   {
   }
-}
-
-int main(int argc, char **argv) {
-  gl::init();
-  
-  glutInit(&argc, argv);
-    
-  glutInitWindowPosition(0, 0);
-  glutInitWindowSize(640, 480);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-  glutCreateWindow("OthelloGame");
-    
-  glutDisplayFunc(gl::display);
-  glutKeyboardFunc(gl::keyboard);
-  glutKeyboardUpFunc(gl::keyboardUp);
-  glutSpecialFunc(gl::keyboardSpecial);
-  glutSpecialFunc(gl::keyboardSpecialUp);
-
-  glutMainLoop();
-
-  return 0;
 }
